@@ -6,21 +6,27 @@ from screen import screen
 class GameEngine:
     """Orchestrates loop cycles, active state controls, and event listeners."""
     def __init__(self):
+        screen.tracer(0)
         self.ui = UIManager()
         self.snake = Snake()
         self.food = Food()
         self.is_game_on = False
+        screen.update()
         
         self.setup_game()
 
     def setup_game(self):
+        self.ui.draw_boundary()
+        self.ui.write_score()
         self.ui.write_menu("Press SPACE to start the game.")
         screen.listen()
         screen.onkey(self.start_game, 'space')
 
     def start_game(self):
+        screen.tracer(0)
         self.ui.clear_menu()
         self.food.position_food()
+        screen.update()
         screen.onkey(None, 'space')
 
         screen.onkey(self.snake.turn_up, "w")
@@ -34,7 +40,8 @@ class GameEngine:
     def game_loop(self):
         if not self.is_game_on:
             return
-        
+
+        screen.tracer(0)
         self.snake.move()
 
         # Check collision with food
@@ -49,15 +56,19 @@ class GameEngine:
             self.is_game_on = False
             self.ui.write_game_over("GAME OVER!", "Press 'r' to play again.")
             screen.onkey(self.restart_game, 'r')
+            screen.update()
             return
 
+        screen.update()
         screen.ontimer(self.game_loop, 100)
 
     def restart_game(self):
         screen.onkey(None, 'r')
+        screen.tracer(0)
         self.ui.clear_game_over()
         self.ui.reset_score()
         self.snake.snake_reset()
+        screen.update()
         self.setup_game()
 
 

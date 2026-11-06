@@ -1,4 +1,4 @@
-from turtle import Turtle, Screen
+from turtle import Turtle
 
 # Constraints
 VISUAL_LOS = 280
@@ -6,7 +6,6 @@ VISUAL_LOS = 280
 class UIManager:
     """Manages standalone menu self.screens, static lines, and visual alerts."""
     def __init__(self):
-        self.screen = Screen()
         self.menu_writer = Turtle()
         self.game_over_writer = Turtle()
 
@@ -17,14 +16,9 @@ class UIManager:
         self.score_writer.penup()
         self.score_writer.goto(0, 280)
         self.score = 0
-
-        self.draw_boundary()
-        self.write_score()
-
+        self.high_score = 0
 
     def draw_boundary(self):
-        self.screen.tracer(0)
-
         writer = Turtle()
         writer.hideturtle()
         writer.penup()
@@ -32,9 +26,6 @@ class UIManager:
         writer.goto(-VISUAL_LOS, -VISUAL_LOS)
         writer.setheading(90)
         writer.pendown()
-
-        self.screen.update()
-        self.screen.tracer(1)
 
         for _ in range(4):
             writer.forward(VISUAL_LOS * 2)
@@ -51,11 +42,9 @@ class UIManager:
         # write the message
         self.menu_writer.goto(0, 240)
         self.menu_writer.write(msg, align="center", font=("Courier", 12, "normal"))
-        self.screen.update()
 
     def clear_menu(self):
         self.menu_writer.clear()
-        self.screen.update()
 
     def write_game_over(self, msg1: str, msg2: str):
         self.game_over_writer.clear()
@@ -67,21 +56,23 @@ class UIManager:
         self.game_over_writer.color("white")
         self.game_over_writer.goto(0, 0)
         self.game_over_writer.write(msg2, align="center", font=("Courier", 14, "normal"))
-        self.screen.update()
 
     def clear_game_over(self):
         self.game_over_writer.clear()
-        self.screen.update()
 
     def write_score(self):
         self.score_writer.clear()
-        self.score_writer.write(f"SCORE: {self.score}", align="center", font=("Courier", 10, "normal") )
-        self.screen.update()
+        with open("score.txt", "r") as f:
+            self.high_score = int(f.readline())
+        self.score_writer.write(f"SCORE: {self.score}. HI-SCORE: {self.high_score}", align="center", font=("Courier", 10, "normal") )
 
     def update_score(self):
         self.score +=1
         self.write_score()
 
     def reset_score(self):
+        if self.score > self.high_score:
+            with open("score.txt", "w") as f:
+                f.write(str(self.score))
         self.score = 0
         self.write_score()

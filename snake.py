@@ -7,7 +7,6 @@ BOUNDARY_LIMIT = 260
 class Snake:
     """Manages the snake's body, core physics movement, and directional state."""
     def __init__(self):
-        self.screen = Screen()
         self.segments = []
         self.segment_pool = []
         self.current_heading = 0
@@ -22,17 +21,13 @@ class Snake:
         return segment
 
     def setup_snake(self):
-        self.screen.tracer(0)
         for _ in range(3):
             self.segments.append(self.create_segment())
 
         for i, cord in enumerate(self.cords):
             self.segments[i].goto(cord)
-        self.screen.update()
-        self.screen.tracer(1)
 
     def move(self):
-        self.screen.tracer(0)
         for seg_num in range(len(self.segments)-1, 0, -1):
             new_x=self.segments[seg_num-1].xcor()
             new_y=self.segments[seg_num-1].ycor()
@@ -40,8 +35,6 @@ class Snake:
     
         self.segments[0].setheading(self.current_heading)  
         self.segments[0].forward(20)
-        self.screen.update()
-        self.screen.tracer(1)
 
         self.can_turn = True
 
@@ -66,7 +59,6 @@ class Snake:
             self.can_turn = False
 
     def add_segment(self):
-        self.screen.tracer(0)
         if self.segment_pool:
             new_seg = self.segment_pool.pop()
             new_seg.showturtle()
@@ -75,8 +67,6 @@ class Snake:
 
         new_seg.goto(self.segments[-1].position())
         self.segments.append(new_seg)
-        self.screen.update()
-        self.screen.tracer(1)
 
     def has_collided(self):
         head_x = self.segments[0].xcor()
@@ -98,7 +88,6 @@ class Snake:
         return False
 
     def snake_reset(self):
-        self.screen.tracer(0)
 
         extras = self.segments[3:]
         for extra_seg in extras:
@@ -112,6 +101,3 @@ class Snake:
 
         self.current_heading = 0
         self.can_turn = True
-
-        self.screen.update()
-        self.screen.tracer(1)
