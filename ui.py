@@ -43,9 +43,6 @@ class UIManager:
         self.menu_writer.goto(0, 240)
         self.menu_writer.write(msg, align="center", font=("Courier", 12, "normal"))
 
-    def clear_menu(self):
-        self.menu_writer.clear()
-
     def write_game_over(self, msg1: str, msg2: str):
         self.game_over_writer.clear()
         self.game_over_writer.hideturtle()
@@ -57,13 +54,14 @@ class UIManager:
         self.game_over_writer.goto(0, 0)
         self.game_over_writer.write(msg2, align="center", font=("Courier", 14, "normal"))
 
-    def clear_game_over(self):
-        self.game_over_writer.clear()
-
     def write_score(self):
         self.score_writer.clear()
-        with open("score.txt", "r") as f:
-            self.high_score = int(f.readline())
+        try:
+            with open("score.txt", "r") as f:
+                self.high_score = int(f.readline())
+        except FileNotFoundError:
+            with open("score.txt", "w") as f:
+                f.write("0")
         self.score_writer.write(f"SCORE: {self.score}. HI-SCORE: {self.high_score}", align="center", font=("Courier", 10, "normal") )
 
     def update_score(self):

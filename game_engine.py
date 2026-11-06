@@ -24,7 +24,7 @@ class GameEngine:
 
     def start_game(self):
         screen.tracer(0)
-        self.ui.clear_menu()
+        self.ui.menu_writer.clear()
         self.food.position_food()
         screen.update()
         screen.onkey(None, 'space')
@@ -65,7 +65,7 @@ class GameEngine:
     def restart_game(self):
         screen.onkey(None, 'r')
         screen.tracer(0)
-        self.ui.clear_game_over()
+        self.ui.game_over_writer.clear()
         self.ui.reset_score()
         self.snake.snake_reset()
         screen.update()
